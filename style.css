@@ -1,0 +1,47 @@
+@charset 'utf-8';
+
+.header .material-icons {
+    margin-right: 1rem;
+    vertical-align: middle;
+}
+
+p {
+    word-break: break-all;
+}
+
+[v-cloak] {
+    display: none;
+}
+
+.u-handle {
+    cursor: move;
+}
+
+.u-checked {
+    background: #e6f5f3;
+    transition: .4s;
+}
+
+.u-inputting {
+    color: #999;
+}
+
+.u-typing::after {
+    content: '|';
+    animation: 1s typing ease infinite;
+}
+@keyframes typing {
+    0% { opacity: 0; }
+    50% { opacity: 0; }
+    51% { opacity: 1; }
+    100% { opacity: 1; }
+}
+
+[type="checkbox"]+span:not(.lever) {
+    vertical-align: middle;
+}
+
+textarea.materialize-textarea {
+    height: 64px;
+    overflow-y: scroll;
+}

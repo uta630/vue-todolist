@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Todo List</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <div id="app" class="container" v-cloak>
+        <header-head>Vue.js で作る Todo List</header-head>
+
+        <main>
+            <div>
+                <div class="row">
+                    <label for="title" class="col s5 input-field">
+                        Title : <input type="text" v-model="inputTask.title" placeholder="What to do?">
+                    </label>
+                    <label for="detail" class="col s11 input-field">
+                        Detail : <textarea class="materialize-textarea" v-model="inputTask.detail" placeholder="Let's write what ..."></textarea>
+                    </label>
+                    <button type="button" class="col btn-floating btn-large waves-effect waves-light red" v-on:click="addTask" v-bind:disabled="inputTask.title == '' || inputTask.detail == ''">
+                        <i class="material-icons add">add</i>
+                    </button>
+                </div>
+            </div>
+
+            <div>
+                <div class="row">
+                    <button type="button" class="btn teal accent-4" v-on:click="allSelectedBtn" v-bind:disabled="type != 'tasks'">All Select</button>
+                    <button type="button" class="btn teal accent-4" v-on:click="allOparationBtn(completed)" v-bind:disabled="type != 'tasks' || isChecked <= 0">All Completed</button>
+                    <button type="button" class="btn teal accent-4" v-on:click="allOparationBtn(remove)" v-bind:disabled="type != 'tasks' || isChecked <= 0">All Remove</button>
+                </div>
+                <div class="row">
+                    <label>
+                        <input type="radio" name="list" class="with-gap" @click="type = 'tasks'" checked><span>Task List</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="list" class="with-gap" @click="type = 'completed'"><span>Completed List</span>
+                    </label>
+                    <label>
+                        <input type="radio" name="list" class="with-gap" @click="type = 'remove'"><span>Remove List</span>
+                    </label>
+                </div>
+
+                <div>
+                    <p>Tasks : {{ tasks.length }} | Completed : {{ completed.length }}</p>
+                </div>
+            </div>
+
+            <div>
+                <ul class="row">
+                    <li class="card col s12 u-inputting" v-if="(inputTask.title != '' || inputTask.detail != '') && type == 'tasks'">
+                        <div class="card-content">
+                            <span class="card-title u-typing" v-if="inputTask.title">{{ inputTask.title }}</span>
+                            <p class="u-typing" v-if="inputTask.detail">{{ inputTask.detail }}</p>
+                        </div>
+                    </li>
+
+                    <draggable class="draggable" v-model="tasks" :list="tasks" :options="{handle:'.u-handle'}">
+                        <li class="card col s12" v-for="(task, i) in tasks" v-if="type == 'tasks'" v-bind:class="{'u-checked': task.isChecked}">
+                            <div class="card-content">
+                                <i class="material-icons u-handle right">drag_indicator</i>
+                                <span class="card-title">
+                                    {{ task.title }}
+                                </span>
+                                <p>{{ task.detail }}</p>
+                            </div>
+
+                            <div class="card-action">
+                                <label>
+                                    <input type="checkbox" class="btn filled-in teal accent-4" v-model="task.isChecked" v-on:click="isCheckedBtn(task)">
+                                    <span></span>
+                                </label>
+                                <button type="button" class="btn teal accent-4" v-on:click="oparationBtn(completed, i)" v-bind:disabled="!task.isChecked">complete</button>
+                                <button type="button" class="btn teal accent-4" v-on:click="oparationBtn(remove, i)" v-bind:disabled="!task.isChecked">remove</button>
+                            </div>
+                        </li>
+                    </draggable>
+
+                    <li class="card col s12" v-for="(item, i) in completed" v-if="type == 'completed'">
+                        <div class="card-content">
+                            <span class="card-title">
+                                {{ item.title }}
+                            </span>
+                            <p>{{ item.detail }}</p>
+                        </div>
+                    </li>
+
+                    <li class="card col s12" v-for="(item, i) in remove" v-if="type == 'remove'">
+                        <div class="card-content">
+                            <span class="card-title">
+                                {{ item.title }}
+                            </span>
+                            <p>{{ item.detail }}</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </main>
+
+        <footer>
+            <nav class="teal accent-4">
+                <ul class="nav-wrapper">
+                    <li><a href="https://jp.vuejs.org/" target="_blank">Vue.js</a></li>
+                    <li><a href="https://materializecss.com/" target="_blank">Materialize</a></li>
+                    <li><a href="https://material.io/tools/icons/?style=baseline" target="_blank">Google Material Design Icon</a></li>
+                </ul>
+            </nav>
+        </footer>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.2/vue.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.7.0/Sortable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.16.0/vuedraggable.min.js"></script>
+    <script src="./app.js"></script>
+</body>
+</html>
